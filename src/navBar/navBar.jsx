@@ -1,7 +1,7 @@
 import React from "react"; 
 import { Link } from "react-router-dom";
 import { Search, ShoppingCart, MapPin, User, LogOut } from "lucide-react";
-import logo from "../../public/uploads/Rolex2.jpeg"
+import logo from "../../public/uploads/Rolex3.jpeg"
 
 function Navbar({ cartCount, onLogout, isLoggedIn }) {
   return (
