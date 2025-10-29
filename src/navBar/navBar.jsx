@@ -1,7 +1,7 @@
 import React from "react"; 
 import { Link } from "react-router-dom";
 import { Search, ShoppingCart, MapPin, User, LogOut } from "lucide-react";
-import logo from "../../public/uploads/Rolex3.jpeg"
+import logo from "../../public/uploads/DanTechy-watch.jpeg"
 
 function Navbar({ cartCount, onLogout, isLoggedIn }) {
   return (
@@ -44,7 +44,7 @@ function Navbar({ cartCount, onLogout, isLoggedIn }) {
                 src={logo} 
                 alt="WatchLocker Logo" 
                 width={60} 
-                className="relative z-10 transform group-hover:scale-105 transition-transform duration-300 drop-shadow-2xl"
+                className="relative z-10 object-cover transform group-hover:scale-105 transition-transform duration-300 drop-shadow-2xl"
               />
             </div>
           </Link>

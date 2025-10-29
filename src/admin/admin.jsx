@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import logo from "../../public/uploads/daniel.jpg"
 
 const AdminDashboard = () => {
   const [watches, setWatches] = useState([]);
@@ -418,6 +419,69 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
+
+      
+            {/* Footer Section */}
+      <footer className="mt-12 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white rounded-2xl p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* About Us */}
+            <div>
+              <h3 className="text-base font-bold mb-3">ABOUT US</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                DanTechy is your one-stop online watch store for genuine affordable luxury watches from global brands.
+              </p>
+              <p className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg overflow-hidden">
+                <img 
+                  src={logo} 
+                  alt="Logo" 
+                  className="w-full h-full object-cover"
+                />
+              </p>
+            </div>
+      
+            {/* Policy */}
+            <div>
+              <h3 className="text-base font-semibold mb-3">POLICY</h3>
+              <ul className="space-y-1 text-gray-300 text-sm">
+                <li>Returns & Refunds</li>
+                <li>Terms & Conditions</li>
+                <li>Career</li>
+              </ul>
+            </div>
+      
+            {/* Store Locations */}
+            <div>
+              <h3 className="text-base font-semibold mb-3">OUR STORES</h3>
+              <div className="space-y-2 text-gray-300 text-sm">
+                <div>
+                  <p className="font-medium">Main Office:</p>
+                  <p>15, Awoyaya Shopping Complex, Eti-Osa, Lagos.</p>
+                </div>
+                <div>
+                  <p className="font-medium">Ipaja Store:</p>
+                  <p>Ipaja Market Plaza, Ayobo Road, Lagos</p>
+                </div>
+              </div>
+            </div>
+      
+            {/* Contact */}
+            <div>
+              <h3 className="text-base font-semibold mb-3">CONTACT US</h3>
+              <div className="space-y-1 text-gray-300 text-sm">
+                <p>+2348037262477</p>
+                <p>+2348157991888</p>
+                <p>dantechy130@gmail.com</p>
+              </div>
+            </div>
+          </div>
+      
+          {/* Copyright */}
+          <div className="border-t border-gray-700 mt-6 pt-4 text-center">
+            <p className="text-gray-400 text-sm">© 2025 All Rights Reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
