@@ -34,7 +34,7 @@ export const CartProvider = ({ children, user }) => {
     
     // For all other cases, use the correct server URL with uploads path
     const baseUrl = window.location.hostname === 'localhost' 
-      ? 'http://localhost:5000'
+      ? 'https://wristwatch-app-backend.onrender.com/'
       : window.location.origin; // Use current domain for production
     
     return `${baseUrl}/uploads/${imagePath}`;
@@ -49,7 +49,7 @@ export const CartProvider = ({ children, user }) => {
 
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/cart', {
+      const response = await axios.get('https://wristwatch-app-backend.onrender.com/api/cart', {
         headers: getAuthHeader()
       });
       
@@ -89,7 +89,7 @@ export const CartProvider = ({ children, user }) => {
       const payload = { watchId, quantity };
       
       const response = await axios.post(
-        'http://localhost:5000/api/cart/add', 
+        'https://wristwatch-app-backend.onrender.com/api/cart/add', 
         payload,
         { headers: getAuthHeader() }
       );
@@ -119,7 +119,7 @@ export const CartProvider = ({ children, user }) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/cart/addItemToCart', 
+        'https://wristwatch-app-backend.onrender.com/api/cart/addItemToCart', 
         { cartedItems: items },
         { headers: getAuthHeader() }
       );
@@ -149,7 +149,7 @@ export const CartProvider = ({ children, user }) => {
 
     try {
       const response = await axios.put(
-        'http://localhost:5000/api/cart/update',
+        'https://wristwatch-app-backend.onrender.com/api/cart/update',
         { itemId, quantity },
         { headers: getAuthHeader() }
       );
@@ -179,7 +179,7 @@ export const CartProvider = ({ children, user }) => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/cart/remove/${itemId}`,
+        `https://wristwatch-app-backend.onrender.com/api/cart/remove/${itemId}`,
         { headers: getAuthHeader() }
       );
       
@@ -208,7 +208,7 @@ export const CartProvider = ({ children, user }) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/cart/checkout', 
+        'https://wristwatch-app-backend.onrender.com/api/cart/checkout', 
         {},
         { headers: getAuthHeader() }
       );

@@ -12,7 +12,7 @@ const BulkAddToCart = ({ watches }) => {
     if (!img) return "https://via.placeholder.com/150";
     if (typeof img !== "string") return "https://via.placeholder.com/150";
     if (img.startsWith("http://") || img.startsWith("https://")) return img;
-    return `http://localhost:5000${img.startsWith("/") ? img : `/uploads/${img}`}`;
+    return `https://wristwatch-app-backend.onrender.com${img.startsWith("/") ? img : `/uploads/${img}`}`;
   };
 
   // Use index since watches might not have _id

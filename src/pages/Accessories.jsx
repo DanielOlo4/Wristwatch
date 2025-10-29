@@ -103,7 +103,7 @@ function Accessories() {
 
  useEffect(() => {
   axios
-    .get("http://localhost:5000/api/watches")
+    .get("https://wristwatch-app-backend.onrender.com/api/watches")
     .then((res) => {
       const data = Array.isArray(res.data.data)
         ? res.data.data
@@ -131,7 +131,7 @@ function Accessories() {
   useEffect(() => {
     if (!id) return;
     axios
-      .get(`http://localhost:5000/api/watches/${id}`)
+      .get(`https://wristwatch-app-backend.onrender.com/api/watches/${id}`)
       .then((res) => {
         console.log("✅ Single watch response:", res.data);
         const data = res.data.data || res.data;
@@ -165,7 +165,7 @@ function Accessories() {
     if (!img) return "https://via.placeholder.com/150";
     if (typeof img !== "string") return "https://via.placeholder.com/150";
     if (img.startsWith("http://") || img.startsWith("https://")) return img;
-    return `http://localhost:5000${img.startsWith("/") ? img : `/uploads/${img}`}`;
+    return `https://wristwatch-app-backend.onrender.com${img.startsWith("/") ? img : `/uploads/${img}`}`;
   };
 
   // Handle add to cart with proper watch data

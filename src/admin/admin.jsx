@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   const fetchWatches = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/watches');
+      const response = await axios.get('https://wristwatch-app-backend.onrender.com/api/watches');
       
       if (response.data.success) {
         setWatches(response.data.data);
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
       if (editingWatch) {
         // Update existing watch
         await axios.put(
-          `http://localhost:5000/api/watches/${editingWatch._id}`,
+          `https://wristwatch-app-backend.onrender.com/api/watches/${editingWatch._id}`,
           submitData,
           { 
             headers: { 
@@ -99,7 +99,7 @@ const AdminDashboard = () => {
       } else {
         // Create new watch
         await axios.post(
-          'http://localhost:5000/api/watches/create-watches',
+          'https://wristwatch-app-backend.onrender.com/api/watches/create-watches',
           submitData,
           { 
             headers: { 
@@ -129,7 +129,7 @@ const AdminDashboard = () => {
       price: watch.price.toString(),
       image: null
     });
-    setImagePreview(watch.imageUrl || `http://localhost:5000/uploads/${watch.image}`);
+    setImagePreview(watch.imageUrl || `https://wristwatch-app-backend.onrender.com/uploads/${watch.image}`);
     setShowForm(true);
   };
 
@@ -138,7 +138,7 @@ const AdminDashboard = () => {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/watches/${watchId}`,
+        `https://wristwatch-app-backend.onrender.com/api/watches/${watchId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('Watch deleted successfully');
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
   // Function to get correct image URL
   const getImageUrl = (watch) => {
     if (watch.imageUrl) return watch.imageUrl;
-    if (watch.image) return `http://localhost:5000/uploads/${watch.image}`;
+    if (watch.image) return `https://wristwatch-app-backend.onrender.com/uploads/${watch.image}`;
     return 'https://via.placeholder.com/100x100?text=No+Image';
   };
 

@@ -79,7 +79,7 @@ function DetailWatches() {
     console.log("🔄 Fetching watches from backend...");
     
     axios
-      .get("http://localhost:5000/api/watches")
+      .get("https://wristwatch-app-backend.onrender.com/api/watches")
       .then((res) => {
         console.log("✅ Backend response:", res.data);
         
@@ -152,7 +152,7 @@ function DetailWatches() {
     
     setLoading(true);
     axios
-      .get(`http://localhost:5000/api/watches/${id}`)
+      .get(`https://wristwatch-app-backend.onrender.com/api/watches/${id}`)
       .then((res) => {
         console.log("✅ Single watch response:", res.data);
         // Your backend returns: { success: true, data: watch }
@@ -232,7 +232,7 @@ function DetailWatches() {
     }
     
     // Your backend serves images from /uploads route
-    const resolvedUrl = `http://localhost:5000/uploads/${img}`;
+    const resolvedUrl = `https://wristwatch-app-backend.onrender.com/uploads/${img}`;
     console.log('Resolved image URL:', resolvedUrl);
     return resolvedUrl;
   };

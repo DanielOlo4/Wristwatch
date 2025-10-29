@@ -91,12 +91,12 @@ function AuthPage({ setUser }) {
       // ✅ FIXED: Correct endpoints based on your backend routes
       if (userType === "admin") {
         endpoint = isLogin 
-          ? 'http://localhost:5000/api/admin/login'  // Your actual admin login route
-          : 'http://localhost:5000/api/admin/register'; // Your actual admin register route
+          ? 'https://wristwatch-app-backend.onrender.com/api/admin/login'  // Your actual admin login route
+          : 'https://wristwatch-app-backend.onrender.com/api/admin/register'; // Your actual admin register route
       } else {
         endpoint = isLogin 
-          ? 'http://localhost:5000/api/auth/login'    // Your actual user login route
-          : 'http://localhost:5000/api/auth/register'; // Your actual user register route
+          ? 'https://wristwatch-app-backend.onrender.com/api/auth/login'    // Your actual user login route
+          : 'https://wristwatch-app-backend.onrender.com/api/auth/register'; // Your actual user register route
       }
 
       // Prepare request data
