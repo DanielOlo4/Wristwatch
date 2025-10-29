@@ -210,7 +210,7 @@ function Accessories() {
         
         {/* Content */}
         <div className="relative z-10">
-          <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
+          <h1 className="text-5xl font-sofia text-white mb-4 drop-shadow-lg">
             DanTechy Luxury Timepieces
           </h1>
           <p className="text-lg text-white max-w-2xl mx-auto drop-shadow-md">
@@ -282,11 +282,11 @@ function Accessories() {
               {/* Watch Details */}
               <div className="flex-1 space-y-6">
                 <div>
-                  <span className="inline-block bg-gradient-to-r from-[#3D2B1F] to-[#3D2B1F] text-white px-4 py-1 rounded-full text-sm font-semibold mb-2">
+                  <span className="inline-block bg-gradient-to-r from-[#3D2B1F] to-[#3D2B1F] text-white px-4 py-1 rounded-full text-sm font-sofia mb-2">
                     {watch.brand}
                   </span>
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">{watch.name}</h2>
-                  <p className="text-lg text-blue-600 font-semibold mb-4">{watch.type}</p>
+                  <p className="text-lg text-blue-600 font-sofia mb-4">{watch.type}</p>
                 </div>
                 
                 <p className="text-gray-600 text-lg leading-relaxed">{watch.description}</p>
@@ -344,7 +344,7 @@ function Accessories() {
 
                   {/* Watch Details */}
                   <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-1">
+                    <h3 className="text-xl font-sofia text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-1">
                       {watch.name}
                     </h3>
                     <p className="text-blue-500 font-semibold text-sm">{watch.type}</p>

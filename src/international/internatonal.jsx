@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import logo from "../../public/uploads/daniel.jpg"
 
 function International() {
   const [activeSection, setActiveSection] = useState("care-instructions");
@@ -917,6 +918,13 @@ function International() {
         <h3 className="text-base font-bold mb-3">ABOUT US</h3>
         <p className="text-gray-300 text-sm leading-relaxed">
           DanTechy is your one-stop online watch store for genuine affordable luxury watches from global brands.
+        </p>
+        <p className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg overflow-hidden">
+          <img 
+            src={logo} 
+            alt="Logo" 
+            className="w-full h-full object-cover"
+          />
         </p>
       </div>
 

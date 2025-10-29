@@ -4,6 +4,9 @@ export default {
     "./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {backgroundColor: ["hover"],
+    fontFamily: {
+      sofia: ["Sofia", "sans-serif"]
+    },
      colors: {
       brand: {
         bronze: "#A85432",  // accent / luxury highlight
