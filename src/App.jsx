@@ -12,6 +12,7 @@ import International from "./international/internatonal";
 import DetailsWatches from "./details/details";
 import WomensWatches from "./brand/brand";
 import AdminDashboard from "./admin/admin";
+import OrderSuccess from './pages/CartPage/OrderSuccess';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -69,6 +70,7 @@ function App() {
           <Route path="/watchdetail/:id" element={<DetailsWatches />} />
           <Route path="/brand" element={<WomensWatches />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
         </Routes>
       </Router>
     </CartProvider>
