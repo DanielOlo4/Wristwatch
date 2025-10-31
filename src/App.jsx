@@ -41,7 +41,7 @@ function App() {
           <Route path="/auth" element={<LoginPage setUser={setUser} />} />
 
           {/* Protected Accessories page */}
-          <Route
+          {/* <Route
             path="/accessories"
             element={user ? <Accessories /> : <Navigate to="/login" />}
           />
@@ -60,7 +60,7 @@ function App() {
           <Route
             path="/admin"
             element={user ? <AdminDashboard /> : <Navigate to="/login" />}
-          />
+          /> */}
 
           {/* Other pages */}
           <Route path="/search" element={<SearchPage />} />
@@ -69,6 +69,7 @@ function App() {
           <Route path="/international" element={<International />} />
           <Route path="/watchdetail/:id" element={<DetailsWatches />} />
           <Route path="/brand" element={<WomensWatches />} />
+          <Route path="/accessories" element={<Accessories />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/order-success" element={<OrderSuccess />} />
         </Routes>

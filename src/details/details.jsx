@@ -585,7 +585,7 @@ function DetailWatches() {
                               <p className="text-xs text-gray-500">Luxury Investment</p>
                             </div>
                             <Link 
-                              to={`/watchdetail/${watch._id}`}
+                              to={`/watches/${watch._id}`}
                               className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                             >
                               View Details

@@ -12,7 +12,6 @@ const CartPage = () => {
     getTotalPrice,
     getTotalItems,
     formatImagePath,
-    fetchCart,
     initializePayment,
     verifyPayment
   } = useCart();
@@ -25,49 +24,32 @@ const CartPage = () => {
     deliveryPhone: ''
   });
   const [paymentStatus, setPaymentStatus] = useState(null);
-  const [validationErrors, setValidationErrors] = useState({
-    userId: false,
-    email: false,
-    deliveryAddress: false,
-    deliveryPhone: false,
-    cartEmpty: false
-  });
-  const [authError, setAuthError] = useState(false);
 
-  // ✅ CHECK FOR PAYMENT RETURN
+  // ✅ Check for payment return on page load
   useEffect(() => {
-    const checkPaymentStatus = async () => {
+    const checkPaymentReturn = async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const reference = urlParams.get('reference');
-      const trxref = urlParams.get('trxref');
+      const reference = urlParams.get('reference') || urlParams.get('trxref');
       
-      console.log('🔄 Checking payment return:', { reference, trxref });
-      
-      if (reference || trxref) {
-        const paymentRef = reference || trxref;
-        await handlePaymentVerification(paymentRef);
+      if (reference) {
+        await handlePaymentVerification(reference);
       }
     };
 
-    checkPaymentStatus();
+    checkPaymentReturn();
   }, []);
 
-  // ✅ FIXED: Payment verification using context
+  // ✅ Payment verification - uses backend verifyPayment controller
   const handlePaymentVerification = async (reference) => {
     try {
       setCheckoutLoading(true);
-      console.log('🔍 Verifying payment with reference:', reference);
-      
       const result = await verifyPayment(reference);
       
-      console.log('📊 Verification result:', result);
-
       if (result.success) {
         if (result.data.status === "paid" || result.data.status === "already_paid") {
           toast.success('Payment successful! Your order has been confirmed.');
           setPaymentStatus('success');
           
-          // Clear cart and redirect
           setTimeout(() => {
             window.location.href = '/order-success';
           }, 2000);
@@ -77,7 +59,7 @@ const CartPage = () => {
         setPaymentStatus('failed');
       }
     } catch (error) {
-      console.error('❌ Payment verification error:', error);
+      console.error('Payment verification error:', error);
       toast.error('Payment verification failed. Please contact support.');
       setPaymentStatus('failed');
     } finally {
@@ -85,130 +67,79 @@ const CartPage = () => {
     }
   };
 
-  // ✅ FIXED: Enhanced checkout with proper validation handling
+  // ✅ Checkout process - uses backend initializePayment controller
   const handleCheckout = async () => {
-    // Clear previous errors
-    setValidationErrors({
-      userId: false,
-      email: false,
-      deliveryAddress: false,
-      deliveryPhone: false,
-      cartEmpty: false
-    });
-    setAuthError(false);
-
-    // Frontend validations we CAN check
     if (!localStorage.getItem('token')) {
-      setValidationErrors(prev => ({ ...prev, userId: true }));
       toast.error('Please login to proceed with checkout');
-      setAuthError(true);
       return;
     }
 
     if (cartItems.length === 0) {
-      setValidationErrors(prev => ({ ...prev, cartEmpty: true }));
       toast.error('Your cart is empty');
       return;
     }
 
     if (!deliveryInfo.deliveryAddress || !deliveryInfo.deliveryPhone) {
-      setValidationErrors(prev => ({
-        ...prev,
-        deliveryAddress: !deliveryInfo.deliveryAddress,
-        deliveryPhone: !deliveryInfo.deliveryPhone
-      }));
       toast.error('Please fill in delivery address and phone number');
       return;
     }
 
-    // Validate phone number format
+    // Validate phone number
     const phoneRegex = /^[0-9]{11}$/;
     if (!phoneRegex.test(deliveryInfo.deliveryPhone)) {
-      setValidationErrors(prev => ({ ...prev, deliveryPhone: true }));
       toast.error('Please enter a valid 11-digit phone number');
       return;
     }
 
-    // Validate address length
     if (deliveryInfo.deliveryAddress.length < 10) {
-      setValidationErrors(prev => ({ ...prev, deliveryAddress: true }));
       toast.error('Please enter a complete delivery address (at least 10 characters)');
       return;
     }
-
-    console.log('🛒 Starting checkout process...');
-    console.log('📦 Delivery Info:', deliveryInfo);
-    console.log('🛍️ Cart items count:', cartItems.length);
 
     setCheckoutLoading(true);
     try {
       const result = await initializePayment(deliveryInfo);
 
-      console.log('📊 Payment initialization result:', result);
-
       if (result.success) {
         toast.success('Redirecting to payment gateway...');
         
-        // Store order info in localStorage for success page
+        // Store order info
         localStorage.setItem('currentOrder', JSON.stringify({
           amount: result.data.amount,
           reference: result.data.reference,
           items: cartItems
         }));
         
-        // Redirect to Paystack payment page
+        // Redirect to Paystack
         setTimeout(() => {
-          console.log('🔗 Redirecting to:', result.data.authorization_url);
           window.location.href = result.data.authorization_url;
         }, 1000);
       } else {
-        // ✅ HANDLE BACKEND VALIDATION ERRORS
+        // Handle backend validation errors
         if (result.missingFields) {
-          const newErrors = {
-            userId: result.missingFields.includes('userId'),
-            email: result.missingFields.includes('email'),
-            deliveryAddress: result.missingFields.includes('deliveryAddress'),
-            deliveryPhone: result.missingFields.includes('deliveryPhone'),
-            cartEmpty: false
-          };
-          setValidationErrors(newErrors);
-          
-          // Show specific error messages
           if (result.missingFields.includes('email')) {
             toast.error('Email not found in your profile. Please update your account.');
-            setAuthError(true);
           }
           if (result.missingFields.includes('userId')) {
             toast.error('Authentication failed. Please login again.');
-            setAuthError(true);
             setTimeout(() => {
               localStorage.removeItem('token');
               window.location.href = '/login';
             }, 2000);
           }
         } else {
-          throw new Error(result.message || 'Payment initialization failed');
+          toast.error(result.message || 'Payment initialization failed');
         }
       }
-    } catch (err) {
-      console.error('❌ Checkout error:', err);
-      
-      if (err.message.includes('network') || err.message.includes('fetch')) {
-        toast.error('Network error. Please check your internet connection.');
-      } else if (err.message.includes('Session expired')) {
-        toast.error('Session expired. Please login again.');
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 2000);
-      } else {
-        toast.error(err.message || 'Checkout failed. Please try again.');
-      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error(error.message || 'Checkout failed. Please try again.');
     } finally {
       setCheckoutLoading(false);
     }
   };
 
-  // Rest of your existing functions remain the same...
+  // ✅ Quantity change handler
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) {
       await removeFromCart(itemId);
@@ -221,7 +152,6 @@ const CartPage = () => {
   };
 
   const handleImageError = (itemId) => {
-    console.error(`❌ Image failed to load for item: ${itemId}`);
     setImageErrors(prev => ({ ...prev, [itemId]: true }));
   };
 
@@ -230,7 +160,7 @@ const CartPage = () => {
     return watch.imageUrl || formatImagePath(watch.image);
   };
 
-  // Calculate totals
+  // Calculate totals (matches backend calculation)
   const shippingFee = 1000;
   const taxRate = 0.075;
   const subtotal = getTotalPrice();
@@ -239,7 +169,6 @@ const CartPage = () => {
 
   if (loading) return <div className="text-center py-8">Loading cart...</div>;
 
-  // Payment status display
   if (paymentStatus === 'success') {
     return (
       <div className="max-w-2xl mx-auto p-6 text-center">
@@ -358,7 +287,6 @@ const CartPage = () => {
               </div>
             </div>
 
-            {/* Checkout with delivery info form */}
             {!showCheckoutForm ? (
               <button 
                 onClick={() => {
@@ -366,120 +294,46 @@ const CartPage = () => {
                     toast.error('Please login first');
                     return;
                   }
-                  if (cartItems.length === 0) {
-                    toast.error('Your cart is empty');
-                    return;
-                  }
                   setShowCheckoutForm(true);
                 }}
-                className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold transition duration-200"
+                className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold"
               >
                 Proceed to Checkout
               </button>
             ) : (
               <div className="space-y-4">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="text-sm text-blue-700">
-                    💳 You will be redirected to Paystack for secure payment processing
-                  </p>
-                </div>
-
-                {/* Authentication Error */}
-                {authError && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-red-700 text-sm">
-                      🔐 Authentication issue detected. 
-                      <button 
-                        onClick={() => {
-                          localStorage.removeItem('token');
-                          window.location.href = '/login';
-                        }}
-                        className="underline ml-1 font-semibold"
-                      >
-                        Please login again
-                      </button>
-                    </p>
-                  </div>
-                )}
-
-                {/* Email Error */}
-                {validationErrors.email && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                    <p className="text-yellow-700 text-sm">
-                      📧 Email verification needed. 
-                      <button 
-                        onClick={() => window.location.href = '/profile'}
-                        className="underline ml-1 font-semibold"
-                      >
-                        Update your profile
-                      </button>
-                    </p>
-                  </div>
-                )}
-                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Delivery Address *
-                    {validationErrors.deliveryAddress && (
-                      <span className="text-red-500 text-xs ml-1">(Required)</span>
-                    )}
                   </label>
                   <input
                     type="text"
                     value={deliveryInfo.deliveryAddress}
-                    onChange={(e) => {
-                      setDeliveryInfo(prev => ({ ...prev, deliveryAddress: e.target.value }));
-                      if (validationErrors.deliveryAddress) {
-                        setValidationErrors(prev => ({ ...prev, deliveryAddress: false }));
-                      }
-                    }}
-                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                      validationErrors.deliveryAddress ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
-                    placeholder="Enter your full delivery address (House number, Street, City)"
-                    minLength="10"
+                    onChange={(e) => setDeliveryInfo(prev => ({ ...prev, deliveryAddress: e.target.value }))}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter your full delivery address"
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">Minimum 10 characters</p>
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Phone Number *
-                    {validationErrors.deliveryPhone && (
-                      <span className="text-red-500 text-xs ml-1">(Required)</span>
-                    )}
                   </label>
                   <input
                     type="tel"
                     value={deliveryInfo.deliveryPhone}
-                    onChange={(e) => {
-                      setDeliveryInfo(prev => ({ ...prev, deliveryPhone: e.target.value.replace(/\D/g, '') }));
-                      if (validationErrors.deliveryPhone) {
-                        setValidationErrors(prev => ({ ...prev, deliveryPhone: false }));
-                      }
-                    }}
-                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                      validationErrors.deliveryPhone ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
+                    onChange={(e) => setDeliveryInfo(prev => ({ ...prev, deliveryPhone: e.target.value }))}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                     placeholder="08012345678"
-                    pattern="[0-9]{11}"
-                    maxLength="11"
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">11-digit Nigerian number</p>
-                </div>
-                
-                <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                  <p className="text-sm text-yellow-700 font-semibold">
-                    ⚡ Total Amount: ₦{total.toLocaleString()}
-                  </p>
                 </div>
                 
                 <button 
                   onClick={handleCheckout}
                   disabled={checkoutLoading}
-                  className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center gap-2"
+                  className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {checkoutLoading ? (
                     <>
@@ -487,35 +341,18 @@ const CartPage = () => {
                       Processing...
                     </>
                   ) : (
-                    'Pay Now'
+                    `Pay ₦${total.toLocaleString()}`
                   )}
                 </button>
                 
                 <button 
-                  onClick={() => {
-                    setShowCheckoutForm(false);
-                    setValidationErrors({
-                      userId: false,
-                      email: false,
-                      deliveryAddress: false,
-                      deliveryPhone: false,
-                      cartEmpty: false
-                    });
-                    setAuthError(false);
-                  }}
-                  className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition duration-200"
+                  onClick={() => setShowCheckoutForm(false)}
+                  className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
               </div>
             )}
-            
-            <button 
-              onClick={() => window.location.href = '/accessories'}
-              className="w-full mt-2 border border-blue-600 text-blue-600 py-2 rounded-lg hover:bg-blue-50 transition duration-200"
-            >
-              Continue Shopping
-            </button>
           </div>
         </div>
       )}
