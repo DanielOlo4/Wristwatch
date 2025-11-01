@@ -3,7 +3,7 @@ import { useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom"
 import BulkAddToCart from "../components/BulkAddToCart";
-import { useCart } from "../context/CartContext"; // Add this import
+import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 import logo from "../../public/uploads/daniel.jpg"
 
@@ -49,7 +49,6 @@ const defaultWatches = [
     price: 45000,
     image: "imageCover-89f77bc9-4600-4794-8157-e5117731c584.jpeg"
   },
-  
   {
     name: "Knox Submax",
     brand: "Knox",
@@ -82,9 +81,7 @@ const defaultWatches = [
     price: 45000,
     image: "imageCover-3d39ac00-0fff-49af-b3ed-7189d52840f4.jpeg"
   },
-  
 ];
-
 
 function Accessories() {
   const [watches, setWatches] = useState([]);
@@ -94,7 +91,24 @@ function Accessories() {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const inputRef = useRef(null);
-  const { addToCart } = useCart(); // Add this line
+  const { addToCart } = useCart();
+
+  // Debug function - clean and isolated
+  const debugWatches = () => {
+    console.log("=== 🕵️ WATCHES DEBUG ===");
+    console.log("Total watches:", watches.length);
+    
+    watches.forEach((watch, index) => {
+      console.log(`Watch ${index}:`, {
+        name: watch.name,
+        _id: watch._id || 'NO_ID (default)',
+        image: watch.image,
+        imageUrl: watch.imageUrl,
+        source: watch._id ? 'DATABASE' : 'DEFAULT'
+      });
+    });
+    console.log("=== DEBUG END ===");
+  };
 
   // Show search if query param present
   useEffect(() => {
@@ -102,31 +116,37 @@ function Accessories() {
     setShowSearch(Boolean(open));
   }, [searchParams]);
 
- useEffect(() => {
-  axios
-    .get("https://wristwatch-app-backend.onrender.com/api/watches")
-    .then((res) => {
-      const data = Array.isArray(res.data.data)
-        ? res.data.data
-        : Array.isArray(res.data.watches)
-        ? res.data.watches
-        : Array.isArray(res.data)
-        ? res.data
-        : [];
+  useEffect(() => {
+    axios
+      .get("https://wristwatch-app-backend.onrender.com/api/watches")
+      .then((res) => {
+        const data = Array.isArray(res.data.data)
+          ? res.data.data
+          : Array.isArray(res.data.watches)
+          ? res.data.watches
+          : Array.isArray(res.data)
+          ? res.data
+          : [];
 
-      // If backend returns empty, use default
-      if (!data || data.length === 0) {
+        // If backend returns empty, use default
+        if (!data || data.length === 0) {
+          setWatches(defaultWatches);
+        } else {
+          setWatches(data);
+        }
+      })
+      .catch((err) => {
+        console.error("⚠️ Backend unreachable, using default watches:", err.message);
         setWatches(defaultWatches);
-      } else {
-        setWatches(data);
-      }
-    })
-    .catch((err) => {
-      console.error("⚠️ Backend unreachable, using default watches:", err.message);
-      setWatches(defaultWatches);
-    });
-}, []);
+      });
+  }, []);
 
+  // Run debug when watches change
+  useEffect(() => {
+    if (watches.length > 0) {
+      debugWatches();
+    }
+  }, [watches]);
 
   // ✅ Fetch a single watch by ID
   useEffect(() => {
@@ -161,12 +181,37 @@ function Accessories() {
     );
   });
 
-  // Helper for images - ONLY NAME CHANGED
-  const getImageUrl = (img) => {
-    if (!img) return "https://via.placeholder.com/150";
-    if (typeof img !== "string") return "https://via.placeholder.com/150";
-    if (img.startsWith("http://") || img.startsWith("https://")) return img;
-    return `https://wristwatch-app-backend.onrender.com${img.startsWith("/") ? img : `/uploads/${img}`}`;
+  // FIXED: Universal getImageUrl function that works with ANY watch
+  const getImageUrl = (watch) => {
+    // If imageUrl is provided (new watches from admin), use it
+    if (watch.imageUrl) return watch.imageUrl;
+    
+    // If image is provided (default watches or old watches), construct URL
+    if (watch.image) return `https://wristwatch-app-backend.onrender.com/uploads/${watch.image}`;
+    
+    // Fallback
+    return "https://via.placeholder.com/150";
+  };
+
+  // FIXED: Get images array for a watch - handles ALL cases
+  const getWatchImages = (watch) => {
+    // Case 1: watch has images array
+    if (watch.images && Array.isArray(watch.images) && watch.images.length > 0) {
+      return watch.images;
+    }
+    
+    // Case 2: watch has imageUrl (new watches from admin)
+    if (watch.imageUrl) {
+      return [watch.imageUrl];
+    }
+    
+    // Case 3: watch has image (default watches or old watches)
+    if (watch.image) {
+      return [watch.image];
+    }
+    
+    // Case 4: No images found
+    return [];
   };
 
   // Handle add to cart with proper watch data
@@ -189,10 +234,6 @@ function Accessories() {
       toast.error('❌ Failed to add item to cart');
     }
   };
-
-  // 🧩 Added console logs here
-  console.log("📦 Watches before render:", watches);
-  console.log("🔎 Filtered watches:", filteredWatches);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
@@ -268,10 +309,10 @@ function Accessories() {
               <div className="flex-1">
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6">
                   <div className="flex gap-4 justify-center overflow-x-auto mb-4">
-                    {(watch.images || [watch.image] || []).map((img, i) => (
+                    {getWatchImages(watch).map((img, i) => (
                       <img
                         key={i}
-                        src={getImageUrl(img)}
+                        src={typeof img === 'string' ? getImageUrl({ imageUrl: img, image: img }) : getImageUrl(watch)}
                         alt={`${watch.name} ${i + 1}`}
                         className="w-48 h-48 object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
                       />
@@ -316,32 +357,30 @@ function Accessories() {
             <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {filteredWatches.map((watch, index) => (
                 <div
-                  key={index}
+                  key={watch._id || index}
                   className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 border border-gray-100 hover:border-blue-200 hover:transform hover:-translate-y-2"
                 >
                   {/* Watch Image - Make entire image area clickable */}
-                   <Link to={`/watchdetail/${watch._id}`}>
-                  <div className="relative mb-6">
-                   
+                  <Link to={`/watchdetail/${watch._id}`}>
+                    <div className="relative mb-6">
                       <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 cursor-pointer">
                         <div className="flex gap-2 justify-center overflow-x-auto">
-                          {(watch.images || [watch.image] || []).map((img, i) => (
+                          {getWatchImages(watch).map((img, i) => (
                             <img
                               key={i}
-                              src={getImageUrl(img)}
+                              src={typeof img === 'string' ? getImageUrl({ imageUrl: img, image: img }) : getImageUrl(watch)}
                               alt={`${watch.name} ${i + 1}`}
                               className="w-32 h-32 object-cover rounded-lg group-hover:scale-110 transition-transform duration-500"
                             />
                           ))}
                         </div>
                       </div>
-                   
-                    {/* Brand Badge */}
-                    <div className="absolute -top-2 -right-2 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                      {watch.brand}
+                      {/* Brand Badge */}
+                      <div className="absolute -top-2 -right-2 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                        {watch.brand}
+                      </div>
                     </div>
-                  </div>
-                   </Link>
+                  </Link>
 
                   {/* Watch Details */}
                   <div className="space-y-3">
@@ -358,11 +397,11 @@ function Accessories() {
                       <p className="text-2xl font-bold text-gray-900">${watch.price?.toLocaleString()}</p>
                       <div className="flex gap-2">
                         <button 
-                            onClick={() => handleAddToCart(watch)}
-                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300"
-                          >
-                            Add to Cart
-                          </button>
+                          onClick={() => handleAddToCart(watch)}
+                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300"
+                        >
+                          Add to Cart
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -370,7 +409,6 @@ function Accessories() {
               ))}
             </div>
           </div>
-          
           
           {/* Bulk add sidebar */}
           <div className="lg:col-span-1">
@@ -394,68 +432,67 @@ function Accessories() {
         </div>
       )}
 
-     
-           {/* Footer Section */}
-     <footer className="mt-12 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white rounded-2xl p-6">
-       <div className="max-w-6xl mx-auto">
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-           {/* About Us */}
-           <div>
-             <h3 className="text-base font-bold mb-3">ABOUT US</h3>
-             <p className="text-gray-300 text-sm leading-relaxed">
-               DanTechy is your one-stop online watch store for genuine affordable luxury watches from global brands.
-             </p>
-             <p className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg overflow-hidden">
-               <img 
-                 src={logo} 
-                 alt="Logo" 
-                 className="w-full h-full object-cover"
-               />
-             </p>
-           </div>
-     
-           {/* Policy */}
-           <div>
-             <h3 className="text-base font-semibold mb-3">POLICY</h3>
-             <ul className="space-y-1 text-gray-300 text-sm">
-               <li>Returns & Refunds</li>
-               <li>Terms & Conditions</li>
-               <li>Career</li>
-             </ul>
-           </div>
-     
-           {/* Store Locations */}
-           <div>
-             <h3 className="text-base font-semibold mb-3">OUR STORES</h3>
-             <div className="space-y-2 text-gray-300 text-sm">
-               <div>
-                 <p className="font-medium">Main Office:</p>
-                 <p>15, Awoyaya Shopping Complex, Eti-Osa, Lagos.</p>
-               </div>
-               <div>
-                 <p className="font-medium">Ipaja Store:</p>
-                 <p>Ipaja Market Plaza, Ayobo Road, Lagos</p>
-               </div>
-             </div>
-           </div>
-     
-           {/* Contact */}
-           <div>
-             <h3 className="text-base font-semibold mb-3">CONTACT US</h3>
-             <div className="space-y-1 text-gray-300 text-sm">
-               <p>+2348037262477</p>
-               <p>+2348157991888</p>
-               <p>dantechy130@gmail.com</p>
-             </div>
-           </div>
-         </div>
-     
-         {/* Copyright */}
-         <div className="border-t border-gray-700 mt-6 pt-4 text-center">
-           <p className="text-gray-400 text-sm">© 2025 All Rights Reserved.</p>
-         </div>
-       </div>
-     </footer>
+      {/* Footer Section */}
+      <footer className="mt-12 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white rounded-2xl p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* About Us */}
+            <div>
+              <h3 className="text-base font-bold mb-3">ABOUT US</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                DanTechy is your one-stop online watch store for genuine affordable luxury watches from global brands.
+              </p>
+              <p className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg overflow-hidden">
+                <img 
+                  src={logo} 
+                  alt="Logo" 
+                  className="w-full h-full object-cover"
+                />
+              </p>
+            </div>
+      
+            {/* Policy */}
+            <div>
+              <h3 className="text-base font-semibold mb-3">POLICY</h3>
+              <ul className="space-y-1 text-gray-300 text-sm">
+                <li>Returns & Refunds</li>
+                <li>Terms & Conditions</li>
+                <li>Career</li>
+              </ul>
+            </div>
+      
+            {/* Store Locations */}
+            <div>
+              <h3 className="text-base font-semibold mb-3">OUR STORES</h3>
+              <div className="space-y-2 text-gray-300 text-sm">
+                <div>
+                  <p className="font-medium">Main Office:</p>
+                  <p>15, Awoyaya Shopping Complex, Eti-Osa, Lagos.</p>
+                </div>
+                <div>
+                  <p className="font-medium">Ipaja Store:</p>
+                  <p>Ipaja Market Plaza, Ayobo Road, Lagos</p>
+                </div>
+              </div>
+            </div>
+      
+            {/* Contact */}
+            <div>
+              <h3 className="text-base font-semibold mb-3">CONTACT US</h3>
+              <div className="space-y-1 text-gray-300 text-sm">
+                <p>+2348037262477</p>
+                <p>+2348157991888</p>
+                <p>dantechy130@gmail.com</p>
+              </div>
+            </div>
+          </div>
+      
+          {/* Copyright */}
+          <div className="border-t border-gray-700 mt-6 pt-4 text-center">
+            <p className="text-gray-400 text-sm">© 2025 All Rights Reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
