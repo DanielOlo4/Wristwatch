@@ -83,7 +83,7 @@ const defaultWatches = [
 ];
 
 
-function Accessories() {
+function Homepage() {
   const [watches, setWatches] = useState([]);
   const [watch, setWatch] = useState(null);
   const [searchParams] = useSearchParams();
@@ -415,4 +415,4 @@ function Accessories() {
   );
 }
 
-export default Accessories;
+export default Homepage;

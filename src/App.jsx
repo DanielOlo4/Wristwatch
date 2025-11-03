@@ -41,7 +41,7 @@ function App() {
           <Route path="/auth" element={<LoginPage setUser={setUser} />} />
 
           {/* Protected Accessories page */}
-          {/* <Route
+          <Route
             path="/accessories"
             element={user ? <Accessories /> : <Navigate to="/login" />}
           />
@@ -60,7 +60,7 @@ function App() {
           <Route
             path="/admin"
             element={user ? <AdminDashboard /> : <Navigate to="/login" />}
-          /> */}
+          />
 
           {/* Other pages */}
           <Route path="/search" element={<SearchPage />} />

@@ -54,9 +54,10 @@ function CountrySearch() {
   );
 }
 
-// 👉 Admin Login Section (Top)
-function AdminLogin({ setUser }) {
+// 👉 Unified Login Component
+function UnifiedLogin({ setUser }) {
   const [isLogin, setIsLogin] = useState(true);
+  const [userType, setUserType] = useState("user"); // "user" or "admin"
   const [formData, setFormData] = useState({ 
     username: "", 
     email: "", 
@@ -76,14 +77,18 @@ function AdminLogin({ setUser }) {
     }
 
     if (!isLogin && !formData.username) {
-      toast.error("Username is required for admin registration!");
+      toast.error("Username is required!");
       return;
     }
 
     setLoading(true);
     
     const baseUrl = 'https://wristwatch-app-backend.onrender.com';
-    const endpoint = `${baseUrl}/api/admin/${isLogin ? 'login' : 'register'}`;
+    
+    // Choose endpoint based on user type
+    const endpoint = userType === "admin" 
+      ? `${baseUrl}/api/admin/${isLogin ? 'login' : 'register'}`
+      : `${baseUrl}/api/auth/${isLogin ? 'login' : 'register'}`;
 
     try {
       let requestData = isLogin ? {
@@ -108,203 +113,48 @@ function AdminLogin({ setUser }) {
           return;
         }
 
-        // ✅ ADMIN BACKEND: Returns admin data in response.admin
-        const adminData = response.data.admin || {
-          id: response.data.data?.admin?.id,
-          username: formData.username,
-          email: formData.email,
-          role: 'admin'
-        };
+        // Prepare user data based on user type
+        const userData = userType === "admin" 
+          ? response.data.admin || {
+              id: response.data.data?.admin?.id,
+              username: formData.username,
+              email: formData.email,
+              role: 'admin'
+            }
+          : {
+              username: formData.username || formData.email,
+              email: formData.email,
+              role: 'user'
+            };
 
         localStorage.setItem('token', token);
-        localStorage.setItem('userType', 'admin');
-        localStorage.setItem('userData', JSON.stringify(adminData));
-        
-        setUser(adminData);
-        toast.success(`Admin ${isLogin ? 'login' : 'registration'} successful!`);
-        navigate("/admin");
-      } else {
-        toast.error(response.data.message || "Admin authentication failed");
-      }
-    } catch (error) {
-      console.error('Admin auth error:', error);
-      
-      if (error.response) {
-        const status = error.response.status;
-        const message = error.response.data?.message || error.response.statusText;
-        
-        if (status === 404) {
-          toast.error('Admin authentication service unavailable');
-        } else if (status === 400 || status === 401) {
-          toast.error(message || 'Invalid admin credentials');
-        } else if (status === 403) {
-          toast.error('Admin access denied');
-        } else if (status === 409) {
-          toast.error('Admin already exists');
-        } else {
-          toast.error(message || `Server error: ${status}`);
-        }
-      } else if (error.request) {
-        toast.error('No response from server. Please try again.');
-      } else {
-        toast.error(error.message || 'An unexpected error occurred');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-lg border border-red-100">
-      <div className="text-center mb-4">
-        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <span className="text-xl">🔧</span>
-        </div>
-        <h2 className="text-xl font-bold text-gray-800">
-          {isLogin ? "Admin Login" : "Admin Register"}
-        </h2>
-      </div>
-
-      {!isLogin && (
-        <input
-          className="block w-full my-2 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-red-500"
-          type="text"
-          name="username"
-          placeholder="Admin username"
-          value={formData.username}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      )}
-      
-      <input
-        className="block w-full my-2 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-red-500"
-        type="email"
-        name="email"
-        placeholder="Admin email"
-        value={formData.email}
-        onChange={handleChange}
-        disabled={loading}
-      />
-      
-      <input
-        className="block w-full my-2 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-red-500"
-        type="password"
-        name="password"
-        placeholder="Admin password"
-        value={formData.password}
-        onChange={handleChange}
-        disabled={loading}
-      />
-
-      <button
-        className="w-full p-3 mt-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition disabled:opacity-50"
-        onClick={handleSubmit}
-        disabled={loading}
-      >
-        {loading 
-          ? `${isLogin ? 'Logging in...' : 'Registering...'}` 
-          : `${isLogin ? 'Admin Login' : 'Register Admin'}`
-        }
-      </button>
-
-      <p className="mt-3 text-center text-gray-600 text-sm">
-        {isLogin ? "Need admin access?" : "Already an admin?"}{" "}
-        <button
-          className="text-red-600 hover:text-red-800 font-medium"
-          onClick={() => setIsLogin(!isLogin)}
-        >
-          {isLogin ? "Register here" : "Login here"}
-        </button>
-      </p>
-    </div>
-  );
-}
-
-// 👉 User Login Section (Bottom)
-function UserLogin({ setUser }) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({ 
-    username: "", 
-    email: "", 
-    password: "" 
-  });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async () => {
-    if (!formData.email || !formData.password) {
-      toast.error("Email and password are required!");
-      return;
-    }
-
-    if (!isLogin && !formData.username) {
-      toast.error("Username is required for signup!");
-      return;
-    }
-
-    setLoading(true);
-    
-    const baseUrl = 'https://wristwatch-app-backend.onrender.com';
-    const endpoint = `${baseUrl}/api/auth/${isLogin ? 'login' : 'register'}`;
-
-    try {
-      let requestData = isLogin ? {
-        email: formData.email,
-        password: formData.password
-      } : {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password
-      };
-
-      const response = await axios.post(endpoint, requestData, {
-        timeout: 15000,
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (response.data.success) {
-        const token = response.data.data?.token;
-        
-        if (!token) {
-          toast.error("Authentication failed - no token received");
-          return;
-        }
-
-        // ✅ USER BACKEND: Only returns token, no user data
-        const userData = {
-          username: formData.username || formData.email,
-          email: formData.email,
-          role: 'user'
-        };
-
-        localStorage.setItem('token', token);
-        localStorage.setItem('userType', 'user');
+        localStorage.setItem('userType', userType);
         localStorage.setItem('userData', JSON.stringify(userData));
         
         setUser(userData);
-        toast.success(`User ${isLogin ? 'login' : 'signup'} successful!`);
-        navigate("/accessories");
+        
+        // Navigate to appropriate page based on user type
+        const redirectPath = userType === "admin" ? "/admin" : "/accessories";
+        toast.success(`${userType === "admin" ? "Admin" : "User"} ${isLogin ? 'login' : 'registration'} successful!`);
+        navigate(redirectPath);
       } else {
         toast.error(response.data.message || "Authentication failed");
       }
     } catch (error) {
-      console.error('User auth error:', error);
+      console.error('Auth error:', error);
       
       if (error.response) {
         const status = error.response.status;
         const message = error.response.data?.message || error.response.statusText;
         
         if (status === 404) {
-          toast.error('User authentication service unavailable');
+          toast.error('Authentication service unavailable');
         } else if (status === 400 || status === 401) {
           toast.error(message || 'Invalid credentials');
+        } else if (status === 403) {
+          toast.error('Access denied');
         } else if (status === 409) {
-          toast.error('User already exists');
+          toast.error(userType === "admin" ? 'Admin already exists' : 'User already exists');
         } else {
           toast.error(message || `Server error: ${status}`);
         }
@@ -318,23 +168,65 @@ function UserLogin({ setUser }) {
     }
   };
 
+  // Reset form when switching between login/signup or user types
+  useEffect(() => {
+    setFormData({ username: "", email: "", password: "" });
+  }, [isLogin, userType]);
+
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg border border-blue-100">
-      <div className="text-center mb-4">
-        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <span className="text-xl">👤</span>
-        </div>
-        <h2 className="text-xl font-bold text-gray-800">
-          {isLogin ? "User Login" : "User Signup"}
-        </h2>
+    <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 w-full max-w-md">
+      {/* User Type Toggle */}
+      <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+        <button
+          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition ${
+            userType === "user" 
+              ? "bg-blue-600 text-white shadow" 
+              : "text-gray-600 hover:text-gray-800"
+          }`}
+          onClick={() => setUserType("user")}
+        >
+          👤 User
+        </button>
+        <button
+          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition ${
+            userType === "admin" 
+              ? "bg-red-600 text-white shadow" 
+              : "text-gray-600 hover:text-gray-800"
+          }`}
+          onClick={() => setUserType("admin")}
+        >
+          🔧 Admin
+        </button>
       </div>
 
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
+          userType === "admin" ? "bg-red-100" : "bg-blue-100"
+        }`}>
+          <span className="text-xl">{userType === "admin" ? "🔧" : "👤"}</span>
+        </div>
+        <h2 className="text-xl font-bold text-gray-800">
+          {userType === "admin" ? "Admin" : "User"} {isLogin ? "Login" : "Sign Up"}
+        </h2>
+        <p className="text-sm text-gray-600 mt-1">
+          {userType === "admin" 
+            ? "Manage your watch inventory" 
+            : "Browse our watch collection"
+          }
+        </p>
+      </div>
+
+      {/* Form */}
       {!isLogin && (
         <input
-          className="block w-full my-2 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500"
+          className="block w-full my-3 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:outline-none transition"
+          style={{ 
+            focusRingColor: userType === "admin" ? "#dc2626" : "#2563eb" 
+          }}
           type="text"
           name="username"
-          placeholder="Choose a username"
+          placeholder={userType === "admin" ? "Admin username" : "Choose a username"}
           value={formData.username}
           onChange={handleChange}
           disabled={loading}
@@ -342,7 +234,10 @@ function UserLogin({ setUser }) {
       )}
       
       <input
-        className="block w-full my-2 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500"
+        className="block w-full my-3 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:outline-none transition"
+        style={{ 
+          focusRingColor: userType === "admin" ? "#dc2626" : "#2563eb" 
+        }}
         type="email"
         name="email"
         placeholder="Enter your email"
@@ -352,7 +247,10 @@ function UserLogin({ setUser }) {
       />
       
       <input
-        className="block w-full my-2 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500"
+        className="block w-full my-3 p-3 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:outline-none transition"
+        style={{ 
+          focusRingColor: userType === "admin" ? "#dc2626" : "#2563eb" 
+        }}
         type="password"
         name="password"
         placeholder="Enter your password"
@@ -361,21 +259,30 @@ function UserLogin({ setUser }) {
         disabled={loading}
       />
 
+      {/* Submit Button */}
       <button
-        className="w-full p-3 mt-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+        className={`w-full p-3 mt-2 rounded-lg text-white font-semibold hover:opacity-90 transition disabled:opacity-50 ${
+          userType === "admin" ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
+        }`}
         onClick={handleSubmit}
         disabled={loading}
       >
         {loading 
           ? `${isLogin ? 'Logging in...' : 'Creating account...'}` 
-          : `${isLogin ? 'User Login' : 'Create Account'}`
+          : `${userType === "admin" ? "Admin" : "User"} ${isLogin ? "Login" : "Sign Up"}`
         }
       </button>
 
-      <p className="mt-3 text-center text-gray-600 text-sm">
-        {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+      {/* Toggle between Login/Signup */}
+      <p className="mt-4 text-center text-gray-600 text-sm">
+        {isLogin 
+          ? `Don't have an ${userType} account?` 
+          : `Already have an ${userType} account?`
+        }{" "}
         <button
-          className="text-blue-600 hover:text-blue-800 font-medium"
+          className={`font-medium hover:underline ${
+            userType === "admin" ? "text-red-600 hover:text-red-800" : "text-blue-600 hover:text-blue-800"
+          }`}
           onClick={() => setIsLogin(!isLogin)}
         >
           {isLogin ? "Sign up here" : "Login here"}
@@ -385,22 +292,17 @@ function UserLogin({ setUser }) {
   );
 }
 
-// 👉 Parent page - UPDATED LAYOUT: All three side by side horizontally
+// 👉 Parent page - Simplified layout
 function LoginPage({ setUser }) {
   return (
-    <div className="flex justify-center items-center h-screen gap-8 p-5 
+    <div className="flex justify-center items-center min-h-screen gap-8 p-5 
                     bg-gradient-to-r from-blue-100 to-pink-100 font-sans">
       {/* Wristwatch section */}
       <CountrySearch />
       
-      {/* Admin Login section */}
-      <div className="flex-1 max-w-[400px]">
-        <AdminLogin setUser={setUser} />
-      </div>
-
-      {/* User Login section */}
-      <div className="flex-1 max-w-[400px]">
-        <UserLogin setUser={setUser} />
+      {/* Unified Login section */}
+      <div className="flex justify-center items-center">
+        <UnifiedLogin setUser={setUser} />
       </div>
     </div>
   );
