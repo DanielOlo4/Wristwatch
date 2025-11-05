@@ -13,6 +13,8 @@ import DetailsWatches from "./details/details";
 import WomensWatches from "./brand/brand";
 import AdminDashboard from "./admin/admin";
 import OrderSuccess from './pages/CartPage/OrderSuccess';
+import CheckoutPage from './pages/checkout';
+import PaymentSuccess from './components/payment.successful';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -71,7 +73,11 @@ function App() {
           <Route path="/brand" element={<WomensWatches />} />
           <Route path="/accessories" element={<Accessories />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+          
+          {/* NEW ROUTES ADDED */}
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
         </Routes>
       </Router>
     </CartProvider>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import logo from "../../public/uploads/daniel.jpg";
+import logo from "../../public/uploads/Rolex2.jpeg";
 import { useCart } from "../context/CartContext"; // Add CartContext import
 import toast from "react-hot-toast";
 
@@ -255,23 +255,23 @@ function DetailWatches() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-10">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#3D2B1F] to-[#523522] bg-clip-text text-transparent">
                 DanTechy
               </h1>
               <nav className="hidden md:flex space-x-8">
                 <Link 
                   to="/womens-watches" 
-                  className="text-gray-700 hover:text-rose-600 font-semibold transition-colors duration-300 relative group"
+                  className="text-gray-700 hover:text-[#3D2B1F] font-semibold transition-colors duration-300 relative group"
                 >
                   All Watches
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#3D2B1F] transition-all duration-300 group-hover:w-full"></span>
                 </Link>
                 <Link 
                   to="/our-universe" 
-                  className="text-gray-700 hover:text-rose-600 font-semibold transition-colors duration-300 relative group"
+                  className="text-gray-700 hover:text-[#3D2B1F] font-semibold transition-colors duration-300 relative group"
                 >
                   Our Universe
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#3D2B1F] transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               </nav>
             </div>
@@ -279,12 +279,12 @@ function DetailWatches() {
               <input
                 type="text"
                 placeholder="Search luxury watches..."
-                className="pl-12 pr-6 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-rose-100 focus:border-rose-500 focus:outline-none transition-all duration-300 w-80 bg-white/90 backdrop-blur-sm shadow-lg group-hover:shadow-xl"
+                className="pl-12 pr-6 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#3D2B1F] focus:border-[#523522] focus:outline-none transition-all duration-300 w-80 bg-white/90 backdrop-blur-sm shadow-lg group-hover:shadow-xl"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                <svg className="w-5 h-5 text-gray-400 group-hover:text-rose-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-[#3D2B1F] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -300,10 +300,10 @@ function DetailWatches() {
           <div className="lg:w-1/4">
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-pink-100 p-6 sticky top-8">
               <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#3D2B1F] to-[#523522] rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-white text-lg">⌚</span>
                 </div>
-                <h2 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-rose-700 bg-clip-text text-transparent">Categories</h2>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-[#3D2B1F] to-[#523522] bg-clip-text text-transparent">Categories</h2>
               </div>
               
               {/* Main Categories */}
@@ -315,8 +315,8 @@ function DetailWatches() {
                       onClick={() => setSelectedCategory("all-watches")}
                       className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all duration-300 font-medium ${
                         selectedCategory === "all-watches"
-                          ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg transform -translate-y-0.5"
-                          : "text-gray-700 hover:bg-rose-50 hover:text-rose-700 border border-transparent hover:border-rose-200"
+                          ? "bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white shadow-lg transform -translate-y-0.5"
+                          : "text-gray-700 hover:bg-[#3D2B1F] hover:text-white border border-transparent hover:border-[#523522]"
                       }`}
                     >
                       ✨ All watches
@@ -325,8 +325,8 @@ function DetailWatches() {
                       onClick={() => setSelectedCategory("collectors-corner")}
                       className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all duration-300 font-medium ${
                         selectedCategory === "collectors-corner"
-                          ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg transform -translate-y-0.5"
-                          : "text-gray-700 hover:bg-rose-50 hover:text-rose-700 border border-transparent hover:border-rose-200"
+                          ? "bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white shadow-lg transform -translate-y-0.5"
+                          : "text-gray-700 hover:bg-[#3D2B1F] hover:text-white border border-transparent hover:border-[#523522]"
                       }`}
                     >
                       💎 Collector's Corner
@@ -336,7 +336,7 @@ function DetailWatches() {
 
                 {/* Master Collection Section */}
                 <div>
-                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 bg-gradient-to-r from-gray-100 to-pink-50 px-3 py-2 rounded-lg">
+                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 bg-gradient-to-r from-[#3D2B1F] to-[#523522] px-3 py-2 rounded-lg">
                     MASTER COLLECTIONS
                   </h3>
                   <nav className="space-y-2 ml-2">
@@ -346,8 +346,8 @@ function DetailWatches() {
                         onClick={() => setSelectedCategory(category)}
                         className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all duration-300 font-medium ${
                           selectedCategory === category
-                            ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg transform -translate-y-0.5"
-                            : "text-gray-700 hover:bg-rose-50 hover:text-rose-700 border border-transparent hover:border-rose-200"
+                            ? "bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white shadow-lg transform -translate-y-0.5"
+                            : "text-gray-700 hover:bg-[#3D2B1F] hover:text-white border border-transparent hover:border-[#523522]"
                         }`}
                       >
                         {category === "classic-watches" && "👑 "}
@@ -362,7 +362,7 @@ function DetailWatches() {
 
                 {/* Colorful Watches Section */}
                 <div>
-                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 bg-gradient-to-r from-gray-100 to-pink-50 px-3 py-2 rounded-lg">
+                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 bg-gradient-to-r from-[#3D2B1F] to-[#523522] px-3 py-2 rounded-lg">
                     Colorful Collection
                   </h3>
                   <nav className="space-y-2 ml-2">
@@ -372,8 +372,8 @@ function DetailWatches() {
                         onClick={() => setSelectedCategory(category)}
                         className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all duration-300 font-medium ${
                           selectedCategory === category
-                            ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg transform -translate-y-0.5"
-                            : "text-gray-700 hover:bg-rose-50 hover:text-rose-700 border border-transparent hover:border-rose-200"
+                            ? "bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white shadow-lg transform -translate-y-0.5"
+                            : "text-gray-700 hover:bg-[#3D2B1F] hover:text-white border border-transparent hover:border-[#523522]"
                         }`}
                       >
                         {category === "styled-blue" && "🔵 "}
@@ -387,7 +387,7 @@ function DetailWatches() {
 
                 {/* Technical Watches Section */}
                 <div>
-                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 bg-gradient-to-r from-gray-100 to-pink-50 px-3 py-2 rounded-lg">
+                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 bg-gradient-to-r from-[#3D2B1F] to-[#523522] px-3 py-2 rounded-lg">
                     Technical Mastery
                   </h3>
                   <nav className="space-y-2 ml-2">
@@ -397,8 +397,8 @@ function DetailWatches() {
                         onClick={() => setSelectedCategory(category)}
                         className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all duration-300 font-medium ${
                           selectedCategory === category
-                            ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg transform -translate-y-0.5"
-                            : "text-gray-700 hover:bg-rose-50 hover:text-rose-700 border border-transparent hover:border-rose-200"
+                            ? "bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white shadow-lg transform -translate-y-0.5"
+                            : "text-gray-700 hover:bg-[#3D2B1F] hover:text-white border border-transparent hover:border-[#523522]"
                         }`}
                       >
                         {category === "power-reserve" && "🔋 "}
@@ -418,15 +418,15 @@ function DetailWatches() {
                   <div className="font-semibold text-gray-500 uppercase tracking-wider mb-2">Collection Status</div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Total Pieces:</span>
-                    <span className="font-bold text-rose-600">{watches.length}</span>
+                    <span className="font-bold text-[#3D2B1F]">{watches.length}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Displaying:</span>
-                    <span className="font-bold text-pink-600">{filteredWatches.length}</span>
+                    <span className="font-bold text-[#3D2B1F]">{filteredWatches.length}</span>
                   </div>
                   {error && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-2 mt-2">
-                      <div className="text-red-600 text-xs font-medium">⚠️ {error}</div>
+                      <div className="text-green-600 text-xs font-medium">⚠️ {error}</div>
                     </div>
                   )}
                 </div>
@@ -436,20 +436,27 @@ function DetailWatches() {
 
           {/* Main Content */}
           <div className="lg:w-3/4">
-            {/* Elegant Page Header */}
-            <div className="mb-12 text-center">
-              <div className="inline-block bg-gradient-to-r from-rose-500 to-pink-500 p-1 rounded-2xl mb-6">
-                <div className="bg-white rounded-xl p-2">
-                  <div className="w-20 h-20 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <span className="text-3xl text-white"><img src={logo} alt="" width={250} /></span>
-                  </div>
-                </div>
+            {/* Elegant Page Header with Background Image */}
+            <div className="mb-12 text-center relative py-24 rounded-2xl overflow-hidden shadow-2xl">
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: `url(${logo})`,
+                }}
+              >
+                {/* Overlay for better text readability */}
+                <div className="absolute inset-0 bg-black bg-opacity-40"></div>
               </div>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 to-rose-800 bg-clip-text text-transparent mb-4">
-                DanTechy Luxury Watches
-              </h1>
-              <h2 className="text-2xl font-semibold text-gray-600 mb-6">{categories[selectedCategory]}</h2>
-              <div className="w-32 h-1.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full mx-auto shadow-lg"></div>
+              
+              {/* Content positioned absolutely over the background */}
+              <div className="relative z-10">
+                <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
+                  DanTechy Luxury Watches
+                </h1>
+                <h2 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">{categories[selectedCategory]}</h2>
+                <div className="w-32 h-1.5 bg-white rounded-full mx-auto shadow-lg"></div>
+              </div>
             </div>
 
             {/* Error State */}
@@ -472,7 +479,7 @@ function DetailWatches() {
             {/* Loading State */}
             {loading && (
               <div className="text-center py-20">
-                <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-rose-200 border-t-rose-500 mb-4"></div>
+                <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#3D2B1F] border-t-[#523522] mb-4"></div>
                 <p className="text-lg text-gray-600 font-semibold">Loading Luxury Collection...</p>
                 <p className="text-sm text-gray-500 mt-2">Discovering exquisite timepieces</p>
               </div>
@@ -482,11 +489,11 @@ function DetailWatches() {
             {!loading && !error && (
               <div className="flex justify-between items-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-pink-100">
                 <p className="text-gray-700 font-semibold">
-                  Showing <span className="text-rose-600 font-bold text-lg">{filteredWatches.length}</span> of{" "}
+                  Showing <span className="text-[#3D2B1F] font-bold text-lg">{filteredWatches.length}</span> of{" "}
                   <span className="text-gray-900 font-bold">{watches.length}</span> luxury pieces
                 </p>
                 <div className="flex items-center space-x-4">
-                  <select className="bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-rose-100 focus:border-rose-500 focus:outline-none shadow-sm font-medium">
+                  <select className="bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-4 focus:ring-[#3D2B1F] focus:border-[#523522] focus:outline-none shadow-sm font-medium">
                     <option>✨ Featured Collection</option>
                     <option>💰 Price: Low to High</option>
                     <option>💎 Price: High to Low</option>
@@ -516,11 +523,11 @@ function DetailWatches() {
                     {/* Watch Details */}
                     <div className="flex-1 space-y-6">
                       <div>
-                        <span className="inline-block bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-1.5 rounded-full text-sm font-bold mb-3 shadow-lg">
+                        <span className="inline-block bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white px-4 py-1.5 rounded-full text-sm font-bold mb-3 shadow-lg">
                           {watch.brand}
                         </span>
                         <h2 className="text-3xl font-bold text-gray-900 mb-2">{watch.name}</h2>
-                        <p className="text-lg text-rose-600 font-semibold">{watch.type}</p>
+                        <p className="text-lg text-[#3D2B1F] font-semibold">{watch.type}</p>
                       </div>
                       
                       <p className="text-gray-600 text-lg leading-relaxed">{watch.description}</p>
@@ -533,7 +540,7 @@ function DetailWatches() {
                         {/* FIXED: Changed from Link to actual button with addToCart functionality */}
                         <button 
                           onClick={() => handleAddToCart(watch)}
-                          className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                          className="bg-gradient-to-r from-[#3D2B1F] to-[#523522] hover:from-[#523522] hover:to-[#3D2B1F] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                         >
                           Add to Collection
                         </button>
@@ -550,7 +557,7 @@ function DetailWatches() {
                     filteredWatches.map((watch) => (
                       <div
                         key={watch._id}
-                        className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 border border-pink-100 hover:border-rose-200 hover:transform hover:-translate-y-2"
+                        className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 p-6 border border-pink-100 hover:border-[#523522] hover:transform hover:-translate-y-2"
                       >
                         {/* Watch Image */}
                         <div className="relative mb-6">
@@ -563,17 +570,17 @@ function DetailWatches() {
                             />
                           </div>
                           {/* Premium Badge */}
-                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                             {watch.brand}
                           </div>
                         </div>
 
                         {/* Watch Details */}
                         <div className="space-y-4">
-                          <h3 className="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors duration-300 line-clamp-1">
+                          <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#3D2B1F] transition-colors duration-300 line-clamp-1">
                             {watch.name}
                           </h3>
-                          <p className="text-rose-500 font-semibold text-sm">{watch.type}</p>
+                          <p className="text-[#3D2B1F] font-semibold text-sm">{watch.type}</p>
                           <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
                             {watch.description}
                           </p>
@@ -586,7 +593,7 @@ function DetailWatches() {
                             </div>
                             <Link 
                               to={`/watches/${watch._id}`}
-                              className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                              className="bg-gradient-to-r from-[#3D2B1F] to-[#523522] hover:from-[#523522] hover:to-[#3D2B1F] text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                             >
                               View Details
                             </Link>
@@ -598,7 +605,7 @@ function DetailWatches() {
                     !error && (
                       <div className="col-span-3 text-center py-20">
                         <div className="w-24 h-24 bg-gradient-to-r from-rose-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                          <span className="text-3xl text-rose-400">💎</span>
+                          <span className="text-3xl text-[#3D2B1F]">💎</span>
                         </div>
                         <h3 className="text-2xl font-bold text-gray-900 mb-3">
                           {watches.length === 0 ? "Collection Empty" : "No Matching Pieces"}
@@ -618,7 +625,7 @@ function DetailWatches() {
             {/* Load More Button */}
             {!loading && filteredWatches.length > 0 && !id && (
               <div className="text-center mt-12">
-                <button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-1">
+                <button className="bg-gradient-to-r from-[#3D2B1F] to-[#523522] hover:from-[#523522] hover:to-[#3D2B1F] text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-1">
                   Load More Luxury Pieces
                 </button>
               </div>
@@ -628,7 +635,7 @@ function DetailWatches() {
       </div>
 
       {/* Footer Section */}
-<footer className="mt-12 bg-gradient-to-br from-gray-900 to-blue-900 text-white rounded-2xl p-6">
+<footer className="mt-12 bg-gradient-to-r from-[#3D2B1F] to-[#523522] text-white rounded-2xl p-6">
   <div className="max-w-6xl mx-auto">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {/* About Us */}

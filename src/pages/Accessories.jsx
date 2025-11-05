@@ -10,6 +10,7 @@ import logo from "../../public/uploads/daniel.jpg"
 // Static fallback array
 const defaultWatches = [
   {
+    _id: "1",
     name: "Rolex Soweto",
     brand: "Rolex",
     type: "Luxury",
@@ -18,6 +19,7 @@ const defaultWatches = [
     image: "imageCover-2a5af63e-fdc8-482a-8fb7-b52e67c94147.jpeg"
   },
   {
+    _id: "2",
     name: "Rolex Submariner",
     brand: "Rolex",
     type: "Luxury",
@@ -26,61 +28,14 @@ const defaultWatches = [
     image: "imageCover-89f77bc9-4600-4794-8157-e5117731c584.jpeg"
   },
   {
+    _id: "3",
     name: "Knox Submax",
     brand: "Knox",
     type: "Luxury",
     description: "A stylish diving watch",
     price: 45000,
     image: "imageCover-3d39ac00-0fff-49af-b3ed-7189d52840f4.jpeg"
-  },
-  {
-    name: "Rolex Soweto",
-    brand: "Rolex",
-    type: "Luxury",
-    price: 12000,
-    description: "Classic diving watch",
-    image: "imageCover-2a5af63e-fdc8-482a-8fb7-b52e67c94147.jpeg"
-  },
-  {
-    name: "Rolex Submariner",
-    brand: "Rolex",
-    type: "Luxury",
-    description: "A stylish diving watch",
-    price: 45000,
-    image: "imageCover-89f77bc9-4600-4794-8157-e5117731c584.jpeg"
-  },
-  {
-    name: "Knox Submax",
-    brand: "Knox",
-    type: "Luxury",
-    description: "A stylish diving watch",
-    price: 45000,
-    image: "imageCover-3d39ac00-0fff-49af-b3ed-7189d52840f4.jpeg"
-  },
-  {
-    name: "Rolex Soweto",
-    brand: "Rolex",
-    type: "Luxury",
-    price: 12000,
-    description: "Classic diving watch",
-    image: "imageCover-2a5af63e-fdc8-482a-8fb7-b52e67c94147.jpeg"
-  },
-  {
-    name: "Rolex Submariner",
-    brand: "Rolex",
-    type: "Luxury",
-    description: "A stylish diving watch",
-    price: 45000,
-    image: "imageCover-89f77bc9-4600-4794-8157-e5117731c584.jpeg"
-  },
-  {
-    name: "Knox Submax",
-    brand: "Knox",
-    type: "Luxury",
-    description: "A stylish diving watch",
-    price: 45000,
-    image: "imageCover-3d39ac00-0fff-49af-b3ed-7189d52840f4.jpeg"
-  },
+  }
 ];
 
 function Accessories() {
@@ -92,23 +47,6 @@ function Accessories() {
   const [searchTerm, setSearchTerm] = useState("");
   const inputRef = useRef(null);
   const { addToCart } = useCart();
-
-  // Debug function - clean and isolated
-  const debugWatches = () => {
-    console.log("=== 🕵️ WATCHES DEBUG ===");
-    console.log("Total watches:", watches.length);
-    
-    watches.forEach((watch, index) => {
-      console.log(`Watch ${index}:`, {
-        name: watch.name,
-        _id: watch._id || 'NO_ID (default)',
-        image: watch.image,
-        imageUrl: watch.imageUrl,
-        source: watch._id ? 'DATABASE' : 'DEFAULT'
-      });
-    });
-    console.log("=== DEBUG END ===");
-  };
 
   // Show search if query param present
   useEffect(() => {
@@ -140,13 +78,6 @@ function Accessories() {
         setWatches(defaultWatches);
       });
   }, []);
-
-  // Run debug when watches change
-  useEffect(() => {
-    if (watches.length > 0) {
-      debugWatches();
-    }
-  }, [watches]);
 
   // ✅ Fetch a single watch by ID
   useEffect(() => {
@@ -181,47 +112,39 @@ function Accessories() {
     );
   });
 
-  // FIXED: Universal getImageUrl function that works with ANY watch
+  // ✅ Universal getImageUrl function
   const getImageUrl = (watch) => {
-    // If imageUrl is provided (new watches from admin), use it
     if (watch.imageUrl) return watch.imageUrl;
-    
-    // If image is provided (default watches or old watches), construct URL
     if (watch.image) return `https://wristwatch-app-backend.onrender.com/uploads/${watch.image}`;
-    
-    // Fallback
     return "https://via.placeholder.com/150";
   };
 
-  // FIXED: Get images array for a watch - handles ALL cases
+  // ✅ Get images array for a watch
   const getWatchImages = (watch) => {
-    // Case 1: watch has images array
     if (watch.images && Array.isArray(watch.images) && watch.images.length > 0) {
       return watch.images;
     }
-    
-    // Case 2: watch has imageUrl (new watches from admin)
     if (watch.imageUrl) {
       return [watch.imageUrl];
     }
-    
-    // Case 3: watch has image (default watches or old watches)
     if (watch.image) {
       return [watch.image];
     }
-    
-    // Case 4: No images found
     return [];
   };
 
-  // Handle add to cart with proper watch data
+  // ✅ Enhanced add to cart with proper watch data
   const handleAddToCart = async (watch) => {
     try {
       const result = await addToCart(watch._id, 1, {
+        _id: watch._id,
         name: watch.name,
         brand: watch.brand,
         price: watch.price,
-        image: watch.image
+        image: watch.image,
+        imageUrl: watch.imageUrl,
+        description: watch.description,
+        type: watch.type
       });
       
       if (result.success) {
@@ -239,7 +162,7 @@ function Accessories() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       {/* Elegant Header Section with Watch Background */}
       <div 
-        className="text-center mb-12 py-36 rounded-2xl shadow-lg relative overflow-hidden"
+        className="text-center mb-12 py-44 rounded-2xl shadow-lg relative overflow-hidden"
         style={{
           backgroundImage: "url('/uploads/Rolex2.jpeg')",
           backgroundSize: '100%',
@@ -335,7 +258,7 @@ function Accessories() {
                 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">${watch.price?.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-gray-900">₦{watch.price?.toLocaleString()}</p>
                     <p className="text-sm text-gray-500">Including VAT</p>
                   </div>
                   <button 
@@ -350,7 +273,7 @@ function Accessories() {
           </div>
         </div>
       ) : (
-        /* 📦 All watches grid with BulkAddToCart sidebar */
+        /* 📦 All watches grid */
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Product listings */}
           <div className="lg:col-span-3">
@@ -360,7 +283,7 @@ function Accessories() {
                   key={watch._id || index}
                   className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 border border-gray-100 hover:border-blue-200 hover:transform hover:-translate-y-2"
                 >
-                  {/* Watch Image - Make entire image area clickable */}
+                  {/* Watch Image */}
                   <Link to={`/watchdetail/${watch._id}`}>
                     <div className="relative mb-6">
                       <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 cursor-pointer">
@@ -394,7 +317,7 @@ function Accessories() {
                     
                     {/* Price and Action */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                      <p className="text-2xl font-bold text-gray-900">${watch.price?.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-gray-900">₦{watch.price?.toLocaleString()}</p>
                       <div className="flex gap-2">
                         <button 
                           onClick={() => handleAddToCart(watch)}

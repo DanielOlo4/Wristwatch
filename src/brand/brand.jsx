@@ -173,7 +173,7 @@ function Homepage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       {/* Elegant Header Section with Watch Background */}
       <div 
-        className="text-center mb-12 py-36 rounded-2xl shadow-lg relative overflow-hidden"
+        className="text-center mb-12 py-44 rounded-2xl shadow-lg relative overflow-hidden"
         style={{
           backgroundImage: "url('/uploads/Rolex2.jpeg')",
           backgroundSize: '100%',
@@ -303,14 +303,14 @@ function Homepage() {
                   </div>
                 </div>
                 {/* Brand Badge */}
-                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                <div className="absolute -top-2 -right-2  text-white px-3 py-1 rounded-full text-xs bg-gradient-to-r from-[#3D2B1F] to-[#523522] font-semibold shadow-lg">
                   {watch.brand}
                 </div>
               </div>
 
               {/* Watch Details */}
               <div className="space-y-3">
-                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-1">
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 line-clamp-1">
                   {watch.name}
                 </h3>
                 <p className="text-blue-500 font-semibold text-sm">{watch.type}</p>
