@@ -18,6 +18,7 @@ export default {
     }
     },
     screens: {
+      xs: '475px',
       sn: "648px",
       // => @media (min-width: 640px) {...}
 

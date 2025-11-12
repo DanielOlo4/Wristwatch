@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
+import { useResponsive } from "../hooks/useResponsive";
 
 import Navbar from "./navBar/navBar";
 import LoginPage from "./LoginPage/LoginPage";
@@ -15,10 +16,12 @@ import AdminDashboard from "./admin/admin";
 import OrderSuccess from './pages/CartPage/OrderSuccess';
 import CheckoutPage from './pages/checkout';
 import PaymentSuccess from './components/payment.successful';
+import PaymentCallback from './components/PaymentCallback';
 
 function App() {
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
+  const { isMobile } = useResponsive();
 
   const handleLogout = () => {
     setUser(null);
@@ -27,58 +30,67 @@ function App() {
   return (
     <CartProvider user={user}>
       <Router>
-        {/* Navbar always visible */}
-        <Navbar
-          cartCount={cartCount}
-          isLoggedIn={!!user}
-          onLogout={handleLogout}
-        />
-
-        <Routes>
-          {/* Default route goes to login/auth */}
-          <Route path="/" element={<Navigate to="/login" />} />
-
-          {/* Auth/Login page */}
-          <Route path="/login" element={<LoginPage setUser={setUser} />} />
-          <Route path="/auth" element={<LoginPage setUser={setUser} />} />
-
-          {/* Protected Accessories page */}
-          <Route
-            path="/accessories"
-            element={user ? <Accessories /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/international"
-            element={user ? <International /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/watchdetail/:id"
-            element={user ? <DetailsWatches /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/brand"
-            element={user ? <WomensWatches /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/admin"
-            element={user ? <AdminDashboard /> : <Navigate to="/login" />}
+        {/* Main container with responsive styling - added to existing structure */}
+        <div className="min-h-screen bg-gray-50">
+          {/* Navbar always visible - unchanged */}
+          <Navbar
+            cartCount={cartCount}
+            isLoggedIn={!!user}
+            onLogout={handleLogout}
           />
 
-          {/* Other pages */}
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/map" element={<MapPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/international" element={<International />} />
-          <Route path="/watchdetail/:id" element={<DetailsWatches />} />
-          <Route path="/brand" element={<WomensWatches />} />
-          <Route path="/accessories" element={<Accessories />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/order-success/:orderId" element={<OrderSuccess />} />
-          
-          {/* NEW ROUTES ADDED */}
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-        </Routes>
+          {/* Added responsive wrapper around Routes */}
+          <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="max-w-7xl mx-auto">
+              <Routes>
+                {/* Default route goes to login/auth */}
+                <Route path="/" element={<Navigate to="/login" />} />
+
+                {/* Auth/Login page */}
+                <Route path="/login" element={<LoginPage setUser={setUser} />} />
+                <Route path="/auth" element={<LoginPage setUser={setUser} />} />
+
+                {/* Protected Accessories page */}
+                <Route
+                  path="/accessories"
+                  element={user ? <Accessories /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/international"
+                  element={user ? <International /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/watchdetail/:id"
+                  element={user ? <DetailsWatches /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/brand"
+                  element={user ? <WomensWatches /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/admin"
+                  element={user ? <AdminDashboard /> : <Navigate to="/login" />}
+                />
+
+                {/* Other pages */}
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/map" element={<MapPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/international" element={<International />} />
+                <Route path="/watchdetail/:id" element={<DetailsWatches />} />
+                <Route path="/brand" element={<WomensWatches />} />
+                <Route path="/accessories" element={<Accessories />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+                
+                {/* NEW ROUTES ADDED */}
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-callback" element={<PaymentCallback />} />
+              </Routes>
+            </div>
+          </main>
+        </div>
       </Router>
     </CartProvider>
   );

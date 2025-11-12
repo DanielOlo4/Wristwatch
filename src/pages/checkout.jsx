@@ -28,7 +28,7 @@ const CheckoutPage = () => {
   };
 
   const subtotal = getTotalPrice();
-  const totalPrice = subtotal; // ✅ No shipping cost added
+  const totalPrice = subtotal;
 
   const handlePlaceOrder = async () => {
     // Check authentication
@@ -131,6 +131,10 @@ const CheckoutPage = () => {
         return;
       }
 
+      // ✅ Store order ID for OrderSuccess page
+      localStorage.setItem("pendingOrder", order._id);
+      localStorage.setItem("orderShippingAddress", JSON.stringify(shippingAddress));
+      
       // Initialize Paystack payment with retry
       const initRes = await axiosWithRetry(
         "https://wristwatch-app-backend.onrender.com/api/orders/payment/initialize",
@@ -149,13 +153,11 @@ const CheckoutPage = () => {
 
       clearCart();
       toast.success("Redirecting to Paystack...");
-      localStorage.setItem("currentOrder", order._id);
       window.location.href = authorization_url;
       
     } catch (err) {
       console.error("Order creation error:", err);
       
-      // Enhanced error handling
       if (err.response) {
         console.error("Error response data:", err.response.data);
         console.error("Error response status:", err.response.status);
@@ -176,6 +178,7 @@ const CheckoutPage = () => {
     }
   };
 
+  // ... rest of your component remains the same
   if (!cartItems || cartItems.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 pt-24 px-4">
